@@ -6,6 +6,7 @@ from disclosekit.pdf.text_native import native_text_length
 from disclosekit.pdf.images import page_has_images
 from disclosekit.pdf.classify import classify_page
 from disclosekit.ocr.policy import should_ocr
+from disclosekit.ocr.tesseract import TesseractEngine
 
 DATASET_ROOT = Path("/home/maria/disclosekit/data/epstein/DataSet 6")
 
@@ -69,4 +70,37 @@ for doc in docs[:2]:
         print(
             f"  Page {i}: type={page_type}, OCR={ocr_flag}"
         )
+
+import pdfplumber
+from disclosekit.pdf.classify import classify_page
+from disclosekit.ocr.policy import should_ocr
+from disclosekit.ocr.tesseract import TesseractEngine
+
+ocr_engine = TesseractEngine()
+
+pdf_path = DATASET_ROOT / docs[0]["relative_path"]
+
+with pdfplumber.open(pdf_path) as pdf:
+    print(f"\nDocument: {docs[0]['document_id']}")
+
+    for i, page in enumerate(pdf.pages[:2], start=1):
+        native_text = page.extract_text() or ""
+        native_len = len(native_text)
+
+        has_images = bool(page.images)
+
+        page_type = classify_page(native_len, has_images)
+
+        print(
+            f"  Page {i}: type={page_type}, "
+            f"native_text_length={native_len}, "
+            f"has_images={has_images}"
+        )
+
+        if should_ocr(page_type):
+            ocr = ocr_engine.ocr_page(page)
+            print(
+                f"    OCR confidence={ocr['confidence']:.2f}, "
+                f"OCR text sample={ocr['text'][:80]!r}"
+            )
 
