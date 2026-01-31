@@ -1,0 +1,63 @@
+disclosekit/
+├── pyproject.toml
+├── README.md
+├── LICENSE
+│
+├── disclosekit/
+│   ├── __init__.py
+│
+│   ├── config.py
+│   │   # constants, defaults, thresholds
+│   │
+│   ├── schemas/
+│   │   ├── __init__.py
+│   │   ├── dataset.py        # DatasetSchema
+│   │   ├── document.py       # DocumentSchema
+│   │   └── page.py           # PageSchema
+│   │
+│   ├── ingest/
+│   │   ├── __init__.py
+│   │   ├── scan.py           # discover PDFs recursively
+│   │   ├── validate.py       # validate PDFs, catch corrupt files
+│   │   └── metadata.py       # file size, page count, provenance
+│   │
+│   ├── pdf/
+│   │   ├── __init__.py
+│   │   ├── open.py           # safe PDF open wrapper
+│   │   ├── pages.py          # iterate pages
+│   │   ├── text_native.py    # extract native text
+│   │   ├── images.py         # detect images per page
+│   │   └── classify.py       # page classification logic
+│   │
+│   ├── ocr/
+│   │   ├── __init__.py
+│   │   ├── engine.py         # OCR engine interface
+│   │   ├── tesseract.py      # Tesseract implementation
+│   │   └── confidence.py     # confidence estimation utilities
+│   │
+│   ├── dataset/
+│   │   ├── __init__.py
+│   │   ├── build.py          # build_dataset(...)
+│   │   ├── stats.py          # dataset-level statistics
+│   │   ├── iterators.py      # iter_documents, iter_pages, iter_text
+│   │   └── export.py         # JSON / JSONL / future formats
+│   │
+│   ├── cli/
+│   │   ├── __init__.py
+│   │   └── main.py           # disclosekit extract ...
+│   │
+│   └── utils/
+│       ├── __init__.py
+│       ├── paths.py
+│       ├── time.py
+│       └── logging.py
+│
+├── tests/
+│   ├── test_scan.py
+│   ├── test_pdf_pages.py
+│   ├── test_ocr.py
+│   └── test_dataset_build.py
+│
+└── examples/
+    ├── extract_epstein_dataset.py
+    └── llm_handoff_example.ipynb
