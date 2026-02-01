@@ -3,7 +3,6 @@ from pathlib import Path
 import json
 
 from disclosekit.build.document import build_document_json
-from disclosekit.ocr.tesseract import TesseractEngine
 
 
 def main():
@@ -16,20 +15,21 @@ def main():
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
 
+    pdf_path = args.pdf.resolve()
+    dataset_root = pdf_path.parent
+
     doc_meta = {
-        "document_id": args.pdf.name,
-        "relative_path": str(args.pdf),
+        "document_id": pdf_path.name,
+        "relative_path": pdf_path.name,  # relative to dataset_root
         "volume": None,
     }
 
-    ocr = TesseractEngine()
     doc_json = build_document_json(
-        doc_meta,
-        dataset_root=Path("/"),
-        ocr_engine=ocr,
+        dataset_root=dataset_root,
+        doc_meta=doc_meta,
     )
 
-    out_path = args.out / f"{args.pdf.stem}.json"
+    out_path = args.out / f"{pdf_path.stem}.json"
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(doc_json, f, indent=2)
 
