@@ -207,3 +207,6 @@ marimo/_lsp/
 __marimo__/
 
 data/
+outputs/
+
+epstein_dataset_6.json
